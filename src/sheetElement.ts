@@ -338,11 +338,17 @@ export class SheetElement extends MarkdownRenderChild {
 				'',
 				this
 			).then(() => {
-				cell.innerHTML =
-					cell
-						.children[0]
-						.innerHTML
-						.replace(/^\u200B /g, '');
+				if(cell.querySelector('li')){
+					for(let i = 0; i<cell.children.length;i++){
+						if(cell.children[i].innerHTML === '' || cell.children[i].innerHTML === '\u200B ')
+							cell.children[i].remove()
+					}
+					cell.innerHTML = cell.innerHTML
+				}
+				else
+					cell.innerHTML = cell.children[0].innerHTML
+
+				cell.innerHTML = cell.innerHTML.replace(/^\u200B /g, '');
 				// cell.append(contentCell);
 			});
 			Object.assign(cell.style, cellStyle);
