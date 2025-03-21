@@ -74,8 +74,10 @@ export class SheetElement extends MarkdownRenderChild {
 		// Start building DOM element
 		this.table = this.el;
 		this.table.id = 'obsidian-sheets-parsed';
-		this.tableHead = this.table.createEl('thead');
+		// this.tableHead = this.table.createEl('thead');
+
 		this.tableBody = this.table.createEl('tbody');
+		this.tableHead = this.tableBody
 
 		// Find header boundaries
 		this.getHeaderBoundaries();
@@ -316,6 +318,11 @@ export class SheetElement extends MarkdownRenderChild {
 		}
 		else if (cellContent == MERGE_UP_SIGNIFIER && this.domGrid?.[rowIndex - 1]?.[columnIndex]) {
 			cell = this.domGrid[rowIndex - 1][columnIndex];
+			cell?.rowSpan || Object.assign(cell, { rowSpan: 1 });
+			cell.rowSpan = rowIndex - parseInt(cell.getAttribute('row-index') || '0') + 1;
+		}
+		else if (cellContent == MERGE_UP_SIGNIFIER && rowIndex === this.headerRow +1 && this.domGrid?.[rowIndex - 2]?.[columnIndex]) {
+			cell = this.domGrid[rowIndex - 2][columnIndex];
 			cell?.rowSpan || Object.assign(cell, { rowSpan: 1 });
 			cell.rowSpan = rowIndex - parseInt(cell.getAttribute('row-index') || '0') + 1;
 		}
